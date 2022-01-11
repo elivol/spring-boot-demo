@@ -11,6 +11,7 @@ import {
     TeamOutlined,
     UserOutlined,
 } from '@ant-design/icons';
+import { Spin } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -20,6 +21,7 @@ const columns = [
         title: '#',
         dataIndex: 'id',
         key: 'id',
+        width: 50,
     },
     {
         title: 'Name',
@@ -43,13 +45,15 @@ function App() {
 
     const [students, setStudents] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
+    const [fetching, setFetching] = useState(true);
 
     const fetchStudents = () =>
         getAllStudents()
             .then(res => res.json())
             .then(data => {
                 console.log(data);
-                setStudents(data)
+                setStudents(data);
+                setFetching(false);
             });
 
     useEffect(() => {
@@ -57,10 +61,20 @@ function App() {
     }, []);
 
     const renderStudents = () => {
+        if (fetching) {
+            return <Spin />;
+        }
         if (students.length <= 0) {
             return <Empty/>
         }
-        return <Table dataSource={students} columns={columns} rowKey={students.id}/>;
+        return <Table dataSource={students}
+                      columns={columns}
+                      rowKey={student => student.id}
+                      bordered
+                      title={() => 'Students'}
+                      pagination={{ pageSize: 50 }}
+                      scroll={{ y: 240 }}
+        />;
     }
 
     return <Layout style={{ minHeight: '100vh' }}>

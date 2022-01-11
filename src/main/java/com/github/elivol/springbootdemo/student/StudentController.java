@@ -21,6 +21,7 @@ public class StudentController {
                 new Student(2L,
                         "Bob",
                         "bob@test.edu",
-                        Gender.MALE));
+                        Gender.MALE)
+        );
     }
 }
