@@ -1,22 +1,65 @@
 import './App.css';
 
 import { useEffect, useState } from 'react';
-import { getAllStudents } from "./client";
+import { getAllStudents, deleteStudent } from "./client";
+import {
+    Layout,
+    Menu,
+    Breadcrumb,
+    Empty,
+    Table,
+    Spin,
+    Button,
+    Badge,
+    Tag,
+    Avatar,
+    Popconfirm,
+    Radio
+} from 'antd';
 
-import {Layout, Menu, Breadcrumb, Empty, Table} from 'antd';
 import {
     DesktopOutlined,
     PieChartOutlined,
     FileOutlined,
     TeamOutlined,
     UserOutlined,
+    PlusOutlined
+
 } from '@ant-design/icons';
-import { Spin } from 'antd';
+import StudentDrawerForm from "./StudentDrawerForm";
+import {errorNotification, successNotification} from "./Notification";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-const columns = [
+const CustomAvatar = ({name}) => {
+    let trim = name.trim();
+    if (trim.length === 0) {
+        return <Avatar icon={<UserOutlined/>}/>
+    }
+    const split = trim.split(" ")
+    if (split.length === 1) {
+        return <Avatar>{name.charAt(0)}</Avatar>
+    }
+    return <Avatar>
+        {`${name.charAt(0)}${name.charAt(name.length - 1)}`}
+    </Avatar>
+}
+
+const deleteStudentConfirmation = (studentId, callback) => {
+    deleteStudent(studentId).then(() => {
+        successNotification( "Student deleted", `Student with ${studentId} was deleted`);
+        callback();
+    });
+}
+
+const columns = fetchStudents => [
+    {
+        title: '',
+        dataIndex: 'avatar',
+        key: 'avatar',
+        render: (text, student) => <CustomAvatar name={student.name}/>
+    },
     {
         title: '#',
         dataIndex: 'id',
@@ -38,6 +81,22 @@ const columns = [
         dataIndex: 'gender',
         key: 'gender',
     },
+    {
+        title: 'Actions',
+        key: 'actions',
+        render: (text, student) =>
+            <Radio.Group>
+                <Popconfirm
+                    placement='topRight'
+                    title={`Are you sure to delete ${student.name}`}
+                    onConfirm={() => deleteStudentConfirmation(student.id, fetchStudents)}
+                    okText='Yes'
+                    cancelText='No'>
+                    <Radio.Button value="small">Delete</Radio.Button>
+                </Popconfirm>
+                <Radio.Button value="small">Edit</Radio.Button>
+            </Radio.Group>
+    },
 ];
 
 
@@ -46,6 +105,7 @@ function App() {
     const [students, setStudents] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
     const [fetching, setFetching] = useState(true);
+    const [showDrawer, setShowDrawer] = useState(false);
 
     const fetchStudents = () =>
         getAllStudents()
@@ -67,14 +127,34 @@ function App() {
         if (students.length <= 0) {
             return <Empty/>
         }
-        return <Table dataSource={students}
-                      columns={columns}
+        return <>
+            <StudentDrawerForm
+                showDrawer={showDrawer}
+                setShowDrawer={setShowDrawer}
+                fetchStudents={fetchStudents}
+            />
+            <Table dataSource={students}
+                      columns={columns(fetchStudents)}
                       rowKey={student => student.id}
                       bordered
-                      title={() => 'Students'}
+                      title={() =>
+                        <>
+                            <Tag>
+                              Number of students
+                            </Tag>
+                            <Badge count={students.length} className="site-badge-count-4" />
+                            <br/><br/>
+                            <Button
+                                onClick={() => setShowDrawer(!showDrawer)}
+                                type="primary" shape="round" icon={<PlusOutlined />} size='small'>
+                                Add New Student
+                            </Button>
+                        </>
+                      }
                       pagination={{ pageSize: 50 }}
-                      scroll={{ y: 240 }}
-        />;
+                      scroll={{ y: 400 }}
+            />
+        </>
     }
 
     return <Layout style={{ minHeight: '100vh' }}>
