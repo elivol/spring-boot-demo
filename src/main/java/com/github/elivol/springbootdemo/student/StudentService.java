@@ -22,7 +22,8 @@ public class StudentService {
         String studentEmail = student.getEmail().trim();
         boolean emailExists = studentRepository.existsWithEmail(studentEmail);
         if (emailExists) {
-            throw new BadRequestException("Student with email" + studentEmail + " is already exists");
+            throw new BadRequestException(
+                    String.format(Locale.ROOT,"Student with email %s is already exists", studentEmail));
         }
 
         studentRepository.save(student);
@@ -32,7 +33,7 @@ public class StudentService {
         boolean exists = studentRepository.existsById(studentId);
         if (!exists) {
             throw new StudentNotFoundException(
-                String.format(Locale.ROOT, "Student with id %d does not exists", studentId));
+                String.format(Locale.ROOT, "Student with id %d does not exist", studentId));
         }
 
         studentRepository.deleteById(studentId);
