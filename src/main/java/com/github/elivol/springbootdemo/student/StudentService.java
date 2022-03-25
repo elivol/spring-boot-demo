@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
+
+import com.github.elivol.springbootdemo.exception.StudentNotFoundException;
+import com.github.elivol.springbootdemo.exception.BadRequestException;
 
 @AllArgsConstructor
 @Service
@@ -15,14 +19,22 @@ public class StudentService {
     }
 
     public void addStudent(Student student) {
-        /// add validation (id must be unique)
+        String studentEmail = student.getEmail().trim();
+        boolean emailExists = studentRepository.existsWithEmail(studentEmail);
+        if (emailExists) {
+            throw new BadRequestException("Student with email" + studentEmail + " is already exists");
+        }
+
         studentRepository.save(student);
     }
 
-    public void  deleteStudent(Long studentId) {
+    public void deleteStudent(Long studentId) {
         boolean exists = studentRepository.existsById(studentId);
-        if (exists) {
-            studentRepository.deleteById(studentId);
+        if (!exists) {
+            throw new StudentNotFoundException(
+                String.format(Locale.ROOT, "Student with id %d does not exists", studentId));
         }
+
+        studentRepository.deleteById(studentId);
     }
 }

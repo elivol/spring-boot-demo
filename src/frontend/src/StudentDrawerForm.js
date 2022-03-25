@@ -1,7 +1,7 @@
 import {Drawer, Input, Col, Select, Form, Row, Button, Spin} from 'antd';
 import {addNewStudent} from "./client";
 import {useState} from 'react';
-import {successNotification} from './Notification';
+import {successNotification, errorNotification} from './Notification';
 
 const {Option} = Select;
 
@@ -19,10 +19,17 @@ function StudentDrawerForm({showDrawer, setShowDrawer, fetchStudents}) {
                 successNotification(
                     "Student successfully added",
                     `${student.name} was added to the system`
-                );
+                )
                 fetchStudents();
             }).catch(err => {
-                console.log(err)
+                console.log(err);
+                err.response.json().then(res => {
+                    console.log(res);
+                    errorNotification(
+                        "There was an issue",
+                        `${res.message} [${res.status}] [${res.error}]`
+                    )
+                });
             }).finally(() => {
                 setSubmitting(false);
             });
