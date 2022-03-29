@@ -3,6 +3,8 @@ on:
   pull_request:
     branches: [main]
 
+  workflow_dispatch:
+
 env:
   POSTGRESQL_VERSION: 14.2
   POSTGRESQL_DB: elvolv
