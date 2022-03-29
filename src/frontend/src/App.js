@@ -117,6 +117,30 @@ function App() {
     const [fetching, setFetching] = useState(true);
     const [showDrawer, setShowDrawer] = useState(false);
 
+    const EmptyTable = () => {
+        <Table
+                columns={columns(fetchStudents)}
+                rowKey={student => student.id}
+                bordered
+                title={() =>
+                <>
+                    <Tag>
+                        Number of students
+                    </Tag>
+                    <Badge count={0} className="site-badge-count-4" />
+                    <br/><br/>
+                    <Button
+                        onClick={() => setShowDrawer(!showDrawer)}
+                        type="primary" shape="round" icon={<PlusOutlined />} size='small'>
+                        Add New Student
+                    </Button>
+                </>
+                }
+            //   pagination={{ pageSize: 50 }}
+            //   scroll={{ y: 400 }}
+        />
+    }
+
     const fetchStudents = () =>
         getAllStudents()
             .then(res => res.json())
@@ -142,8 +166,20 @@ function App() {
         if (fetching) {
             return <Spin />;
         }
-        if (students.length <= 0) {
-            return <Empty/>
+        if (students.length <= 0) {             
+            return <>
+                <Button
+                    onClick={() => setShowDrawer(!showDrawer)}
+                    type="primary" shape="round" icon={<PlusOutlined/>} size="small">
+                    Add New Student
+                </Button>
+                <StudentDrawerForm
+                    showDrawer={showDrawer}
+                    setShowDrawer={setShowDrawer}
+                    fetchStudents={fetchStudents}
+                />
+                <Empty/>
+            </>
         }
         return <>
             <StudentDrawerForm
