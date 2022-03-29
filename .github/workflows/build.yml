@@ -34,4 +34,6 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
       - name: Maven Clean Package
+        env:
+          CI: false
         run: mvn --no-transfer-progress clean package -P build-frontend
