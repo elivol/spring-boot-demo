@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  POSTGRESQL_VERSION: 14.2
+  POSTGRESQL_VERSION: latest
   POSTGRESQL_DB: elvolv
   POSTGRESQL_USER: postgres
   POSTGRESQL_PASSWORD: password
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:14.2
+        image: postgres:latest
         env:
           POSTGRES_DB: ${{ env.POSTGRESQL_DB }}
           POSTGRES_USER: ${{ env.POSTGRESQL_USER }}
