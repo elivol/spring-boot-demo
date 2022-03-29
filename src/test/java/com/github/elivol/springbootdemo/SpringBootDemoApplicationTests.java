@@ -9,6 +9,7 @@ class SpringBootDemoApplicationTests {
 
 	@Test
 	void contextLoads() {
+		Assertions.fail("Ooops, test faild");
 	}
 
 }
