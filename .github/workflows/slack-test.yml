@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: slack-test
 
 # Controls when the workflow will run
 on:
@@ -46,12 +46,32 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*repo:*\n${{ github.repository }}"
+                      "text": "*repo:*\n${{ github.repositoryUrl }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*message*:\n${{ github.event.head_commit.message }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*commit*:\n${{ github.event.head_commit.url }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*author*:\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*event*:\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*ref*:\n${{ github.head_ref }}"
                     }
                   ]
                 }
               ]
-            }      
+            }     
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
