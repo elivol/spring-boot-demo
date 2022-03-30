@@ -37,46 +37,46 @@ jobs:
         with:
           # For posting a rich message using Block Kit
           payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "CI/CD ongoing...:eyes:\t*status* ${{ job.status }}"
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*repo:*\n${{ github.event.repository.url }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*message*:\n${{ github.event.head_commit.message }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*commit*:\n<${{ github.event.head_commit.url }}|${{ github.event.head_commit.id }}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*author*:\n${{ github.actor }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*event*:\n${{ github.event_name }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*ref*:\n${{ github.ref }}"
-                    }
-                  ]
+          {
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "CI/CD ongoing...:eyes:\t*status* ${{ job.status }}"
                 }
-              ]
-            }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*repo:*\n${{ github.event.repository.url }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*message*:\n${{ github.event.head_commit.message }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*commit*:\n<${{ github.event.head_commit.url }}|${{ github.event.head_commit.id }}>"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*author*:\n${{ github.actor }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*event*:\n${{ github.event_name }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*ref*:\n${{ github.ref }}"
+                  }
+                ]
+              }
+            ]
+          }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -156,4 +156,3 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
