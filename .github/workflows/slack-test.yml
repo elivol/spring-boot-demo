@@ -5,8 +5,8 @@ name: CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  pull_request:
-    branches: [ main ]
+  push:
+    branches: [ test-slack-workflow ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -32,15 +32,23 @@ jobs:
         with:
           # For posting a rich message using Block Kit
           payload: |
-            {
-              "text": ":eyes:\nGitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+            {              
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                    "text": "CICD ongoing...:eyes:"
                   }
+                },
+                {
+                  "type": "section",
+                  "fields: [
+                    {
+                      "type": "section"
+                      "text": "*repo*\n${{ github.repository }}"
+                    }
+                  ]                
                 }
               ]
             }
