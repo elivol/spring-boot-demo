@@ -46,7 +46,7 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*repo:*\n${{ github.event.url }}"
+                      "text": "*repo:*\n${{ github.event.repository.url }}"
                     },
                     {
                       "type": "mrkdwn",
