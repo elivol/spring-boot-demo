@@ -32,7 +32,7 @@ jobs:
         with:
           # For posting a rich message using Block Kit
           payload: |
-            {              
+            {
               "blocks": [
                 {
                   "type": "section",
@@ -43,15 +43,15 @@ jobs:
                 },
                 {
                   "type": "section",
-                  "fields: [
+                  "fields": [
                     {
-                      "type": "section"
-                      "text": "*repo*\n${{ github.repository }}"
+                      "type": "mrkdwn",
+                      "text": "*repo:*\n${{ github.repository }}"
                     }
-                  ]                
+                  ]
                 }
               ]
-            }
+            }      
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
