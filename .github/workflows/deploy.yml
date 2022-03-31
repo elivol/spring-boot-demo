@@ -55,10 +55,6 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*message*:\n${{ github.event.head_commit.message }}"
-                    },
-                    {
-                      "type": "mrkdwn",
                       "text": "*commit*:\n<${{ github.event.head_commit.url }}|${{ github.event.head_commit.id }}>"
                     },
                     {
@@ -107,7 +103,6 @@ jobs:
             -P build-frontend \
             -P jib-push-to-dockerhub \
               -Dapp.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}}
-
       - name: Slack message - Docker image pushed
         uses: slackapi/slack-github-action@v1.18.0
         with:
@@ -128,10 +123,6 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "*repo:*\n${{ github.event.repository.url }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*message*:\n${{ github.event.head_commit.message }}"
                     },
                     {
                       "type": "mrkdwn",
@@ -156,4 +147,3 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
