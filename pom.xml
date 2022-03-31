@@ -68,13 +68,14 @@
 				<version>3.2.0</version>
 				<configuration>
 					<from>
-						<image>eclipse-temurin:17</image>
+						<image>eclipse-temurin:17-alpine</image>
 					</from>
 					<container>
 						<ports>
 							<port>8080</port>
 						</ports>
 						<format>OCI</format>
+						<mainClass>com.github.elivol.springbootdemo.SpringBootDemoApplication</mainClass>
 					</container>
 				</configuration>
 			</plugin>
@@ -95,13 +96,14 @@
 						<version>3.2.0</version>
 						<configuration>
 							<from>
-								<image>eclipse-temurin:17</image>
+								<image>eclipse-temurin:17-alpine</image>
 							</from>
 							<container>
 								<ports>
 									<port>8080</port>
 								</ports>
 								<format>OCI</format>
+								<mainClass>com.github.elivol.springbootdemo.SpringBootDemoApplication</mainClass>
 							</container>
 						</configuration>
 						<executions>
