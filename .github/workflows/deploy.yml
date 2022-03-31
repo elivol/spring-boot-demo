@@ -43,15 +43,9 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CI/CD ongoing...:eyes:"
+                    "text": "CI/CD ongoing...:eyes:\t*status* ${{ job.status }}"
                   }
                 },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "status: ${{ job.status }}"
-                }
                 {
                   "type": "section",
                   "fields": [
@@ -133,14 +127,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":white_check_mark: pushed elvolv/springboot-react-fullstack:${{steps.build-number.outputs.BUILD_NUMBER}} to docker hub... https://hub.docker.com/repository/docker/elvolv/springboot-react-fullstack"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "status: ${{ job.status }}"
+                    "text": ":white_check_mark: pushed elvolv/springboot-react-fullstack:${{steps.build-number.outputs.BUILD_NUMBER}} to docker hub... https://hub.docker.com/repository/docker/elvolv/springboot-react-fullstack\n*status* ${{ job.status }}"
                   }
                 },
                 {
