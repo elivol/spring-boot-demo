@@ -55,10 +55,6 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*message*:\n${{ github.event.head_commit.message }}"
-                    },
-                    {
-                      "type": "mrkdwn",
                       "text": "*commit*:\n<${{ github.event.head_commit.url }}|${{ github.event.head_commit.id }}>"
                     },
                     {
@@ -127,10 +123,6 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "*repo:*\n${{ github.event.repository.url }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*message*:\n${{ github.event.head_commit.message }}"
                     },
                     {
                       "type": "mrkdwn",
