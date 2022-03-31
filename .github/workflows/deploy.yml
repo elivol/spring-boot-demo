@@ -1,46 +1,154 @@
-# This is a basic workflow to help you get started with Actions
+name: CICD
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  pull_request:
+  push:
     branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+env:
+  # Postgres
+  POSTGRESQL_VERSION: 14.2
+  POSTGRESQL_DB: elvolv
+  POSTGRESQL_USER: postgres
+  POSTGRESQL_PASSWORD: password
+  # Java
+  JAVA_VERSION: 17
+  JAVA_DISTRIBUTION: temurin
+  # DockerHub
+  DOCKER_HUB_USERNAME: elvolv
+
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  deploy:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    services:
+      postgres:
+        image: postgres:14.2
+        env:
+          POSTGRES_DB: ${{ env.POSTGRESQL_DB }}
+          POSTGRES_USER: ${{ env.POSTGRESQL_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRESQL_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo starting...
-
-      - name: slack send
+      - name: Slack message - starting CI/CD
         uses: slackapi/slack-github-action@v1.18.0
         with:
           # For posting a rich message using Block Kit
           payload: |
             {
-              "text": ":eyes:\nGitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                    "text": "CI/CD ongoing...:eyes:\t*status* ${{ job.status }}"
                   }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*repo:*\n${{ github.event.repository.url }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*message*:\n${{ github.event.head_commit.message }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*commit*:\n<${{ github.event.head_commit.url }}|${{ github.event.head_commit.id }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*author*:\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*event*:\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*ref*:\n${{ github.ref }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - uses: actions/checkout@v2
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Build Number
+        id: build-number
+        run: echo "::set-output name=BUILD_NUMBER::$(date '+%-d.%-m.%Y.%-H.%-M.%-S')"
+
+      - name: Docker Login
+        uses: docker/login-action@v1
+        with:
+          username: ${{ env.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Maven Clean Package and Push to Dockerhub
+        env:
+          CI: false
+        run: |
+          mvn --no-transfer-progress clean package \
+            -P build-frontend \
+            -P jib-push-to-dockerhub \
+              -Dapp.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}}
+      - name: Slack message - Docker image pushed
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":white_check_mark: pushed elvolv/springboot-react-fullstack:${{steps.build-number.outputs.BUILD_NUMBER}} to docker hub... https://hub.docker.com/repository/docker/elvolv/springboot-react-fullstack\n*status* ${{ job.status }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*repo:*\n${{ github.event.repository.url }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*message*:\n${{ github.event.head_commit.message }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*commit*:\n<${{ github.event.head_commit.url }}|${{ github.event.head_commit.id }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*author*:\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*event*:\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*ref*:\n${{ github.ref }}"
+                    }
+                  ]
                 }
               ]
             }
