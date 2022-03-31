@@ -75,7 +75,7 @@
 							<port>8080</port>
 						</ports>
 						<format>OCI</format>
-						<mainClass>com.github.elivol.springbootdemo.SpringBootDemoApplicationTests</mainClass>
+						<mainClass>com.github.elivol.springbootdemo.SpringBootDemoApplication</mainClass>
 					</container>
 				</configuration>
 			</plugin>
@@ -103,7 +103,7 @@
 									<port>8080</port>
 								</ports>
 								<format>OCI</format>
-								<mainClass>com.github.elivol.springbootdemo.SpringBootDemoApplicationTests</mainClass>
+								<mainClass>com.github.elivol.springbootdemo.SpringBootDemoApplication</mainClass>
 							</container>
 						</configuration>
 						<executions>
