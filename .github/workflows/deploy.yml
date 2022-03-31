@@ -32,21 +32,55 @@ jobs:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - name: CICD ongoing
+      - name: Slack message - starting CI/CD
         id: slack
         uses: slackapi/slack-github-action@v1.18.0
         with:
           # For posting a rich message using Block Kit
           payload: |
             {
-              "text": "CICD ongoing...:eyes:",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                    "text": "CI/CD ongoing...:eyes:"
                   }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "status: ${{ job.status }}"
+                }
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*repo:*\n${{ github.event.repository.url }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*message*:\n${{ github.event.head_commit.message }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*commit*:\n<${{ github.event.head_commit.url }}|${{ github.event.head_commit.id }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*author*:\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*event*:\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*ref*:\n${{ github.ref }}"
+                    }
+                  ]
                 }
               ]
             }
@@ -88,3 +122,61 @@ jobs:
           text: ':white_check_mark: pushed elvolv/springboot-react-fullstack:${{steps.build-number.outputs.BUILD_NUMBER}} to docker hub... https://hub.docker.com/repository/docker/elvolv/springboot-react-fullstack'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Slack message - Docker image pushed
+        id: slack
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":white_check_mark: pushed elvolv/springboot-react-fullstack:${{steps.build-number.outputs.BUILD_NUMBER}} to docker hub... https://hub.docker.com/repository/docker/elvolv/springboot-react-fullstack"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "status: ${{ job.status }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*repo:*\n${{ github.event.repository.url }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*message*:\n${{ github.event.head_commit.message }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*commit*:\n<${{ github.event.head_commit.url }}|${{ github.event.head_commit.id }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*author*:\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*event*:\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*ref*:\n${{ github.ref }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
