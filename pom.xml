@@ -75,11 +75,7 @@
 							<port>8080</port>
 						</ports>
 						<format>OCI</format>
-<<<<<<< HEAD
 						<mainClass>com.github.elivol.springbootdemo.SpringBootDemoApplication</mainClass>
-=======
-						<mainClass>com.github.elivol.springbootdemo.SpringBootDemoApplicationTests</mainClass>
->>>>>>> b27a579 (update deploy.yml)
 					</container>
 				</configuration>
 			</plugin>
@@ -107,11 +103,7 @@
 									<port>8080</port>
 								</ports>
 								<format>OCI</format>
-<<<<<<< HEAD
 								<mainClass>com.github.elivol.springbootdemo.SpringBootDemoApplication</mainClass>
-=======
-								<mainClass>com.github.elivol.springbootdemo.SpringBootDemoApplicationTests</mainClass>
->>>>>>> b27a579 (update deploy.yml)
 							</container>
 						</configuration>
 						<executions>
