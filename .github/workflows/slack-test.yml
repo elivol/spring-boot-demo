@@ -54,11 +54,11 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*commit*:\n${{ github.event.head_commit.url }}"
+                      "text": "*commit*:\n<${{ github.event.head_commit.url }}|${{ github.event.head_commit.id }}>"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*author*:\n${{ github.actor }}"
+                      "text": "*author*:\n<${{ github.api_url }}|${{ github.actor }}>"
                     },
                     {
                       "type": "mrkdwn",
