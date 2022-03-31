@@ -2,7 +2,7 @@ name: CICD
 
 on:
   push:
-    branches: [ test-deploy-workflow ]
+    branches: [ main ]
 
   workflow_dispatch:
 
