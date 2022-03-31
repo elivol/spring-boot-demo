@@ -38,7 +38,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CICD ongoing...:eyes:"
+                    "text": "CI/CD ongoing...:eyes:"
                   }
                 },
                 {
@@ -58,7 +58,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*author*:\n<${{ github.api_url }}|${{ github.actor }}>"
+                      "text": "*author*:\n${{ github.actor }}"
                     },
                     {
                       "type": "mrkdwn",
