@@ -63,7 +63,7 @@ const deleteStudentConfirmation = (studentId, callback) => {
     );
 }
 
-const columns = fetchStudents => [
+const columns = (fetchStudents, showEditDrawer, setShowEditDrawer) => [
     {
         title: '',
         dataIndex: 'avatar',
@@ -104,7 +104,16 @@ const columns = fetchStudents => [
                     cancelText='No'>
                     <Radio.Button value="small">Delete</Radio.Button>
                 </Popconfirm>
-                <Radio.Button value="small">Edit</Radio.Button>
+                <Radio.Button value="small" onClick={() => setShowEditDrawer(!showEditDrawer)}>
+                    <StudentDrawerForm
+                        showDrawer={showEditDrawer}
+                        setShowDrawer={setShowEditDrawer}
+                        fetchStudents={fetchStudents}
+                        title="Edit student"
+                        student={student}
+                    />
+                    Edit
+                </Radio.Button>
             </Radio.Group>
     },
 ];
@@ -116,30 +125,7 @@ function App() {
     const [collapsed, setCollapsed] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [showDrawer, setShowDrawer] = useState(false);
-
-    const EmptyTable = () => {
-        <Table
-                columns={columns(fetchStudents)}
-                rowKey={student => student.id}
-                bordered
-                title={() =>
-                <>
-                    <Tag>
-                        Number of students
-                    </Tag>
-                    <Badge count={0} className="site-badge-count-4" />
-                    <br/><br/>
-                    <Button
-                        onClick={() => setShowDrawer(!showDrawer)}
-                        type="primary" shape="round" icon={<PlusOutlined />} size='small'>
-                        Add New Student
-                    </Button>
-                </>
-                }
-            //   pagination={{ pageSize: 50 }}
-            //   scroll={{ y: 400 }}
-        />
-    }
+    const [showEditDrawer, setShowEditDrawer] = useState(false);
 
     const fetchStudents = () =>
         getAllStudents()
@@ -177,6 +163,7 @@ function App() {
                     showDrawer={showDrawer}
                     setShowDrawer={setShowDrawer}
                     fetchStudents={fetchStudents}
+                    title="Create new student"
                 />
                 <Empty/>
             </>
@@ -186,9 +173,10 @@ function App() {
                 showDrawer={showDrawer}
                 setShowDrawer={setShowDrawer}
                 fetchStudents={fetchStudents}
+                title="Create new student"
             />
             <Table dataSource={students}
-                      columns={columns(fetchStudents)}
+                      columns={columns(fetchStudents, showEditDrawer, setShowEditDrawer)}
                       rowKey={student => student.id}
                       bordered
                       title={() =>
