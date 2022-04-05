@@ -29,6 +29,19 @@ public class StudentService {
         studentRepository.save(student);
     }
 
+    public void editStudent(Student student) {
+        boolean emailExists = studentRepository.existsWithEmail(student.getEmail());
+        if (emailExists) {
+            throw new BadRequestException(
+                    String.format(Locale.ROOT,"Student with email %s is already exists", student.getEmail()));
+        }
+        Student editedStudent = studentRepository.getById(student.getId());
+        editedStudent.setName(student.getName());
+        editedStudent.setEmail(student.getEmail());
+        editedStudent.setGender(student.getGender());
+        studentRepository.save(editedStudent);
+    }
+
     public void deleteStudent(Long studentId) {
         boolean exists = studentRepository.existsById(studentId);
         if (!exists) {
@@ -37,5 +50,9 @@ public class StudentService {
         }
 
         studentRepository.deleteById(studentId);
+    }
+
+    public void deleteAllStudents() {
+        studentRepository.deleteAll();
     }
 }
